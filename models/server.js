@@ -9,6 +9,7 @@ class Server {
     this.usuariosPath = "/api/users";
     this.documentPath = "/api/documents";
     this.commentPath = "/api/comment";
+    this.libraryPath = "/api/library";
 
     //Conectar a base de datos
     this.connectDB();
@@ -38,6 +39,7 @@ class Server {
     this.app.use(this.usuariosPath, require("../routes/user"));
     this.app.use(this.documentPath, require("../routes/document"));
     this.app.use(this.commentPath, require("../routes/comment"));
+    this.app.use(this.libraryPath, require("../routes/library"));
   }
 
   listen() {

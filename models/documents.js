@@ -45,6 +45,10 @@ const documentSchema = new Schema({
       type: comments.CommentSchema,
     },
   ],
+  punctuation: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = {

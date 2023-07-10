@@ -44,6 +44,12 @@ const userSchema = {
     type: Boolean,
     default: true,
   },
+  libraries: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Library",
+    },
+  ],
 };
 
 module.exports = model("User", userSchema); //Debe ir en singular

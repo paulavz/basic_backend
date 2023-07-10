@@ -67,16 +67,9 @@ const putDocument = async (req, res = response) => {
       if (err) {
         res.json({ error: err });
       }
-
       res.json(doc);
     }
   );
-};
-
-const patchUsers = (req, res = response) => {
-  res.json({
-    msg: "patch  API- controlador",
-  });
 };
 
 const deleteUsers = (req, res = response) => {
@@ -90,7 +83,4 @@ module.exports = {
   postDocument,
   getDocumentById,
   putDocument,
-  // putUsers,
-  // patchUsers,
-  // deleteUsers,
 };

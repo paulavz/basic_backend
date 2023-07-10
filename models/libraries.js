@@ -1,9 +1,9 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 const librarySchema = {
   userId: {
-    type: mongoose.Types.ObjectId,
-    required: [true, "El usuario es obligatorio"],
+    type: Schema.Types.ObjectId,
+    required: [true, "El userId es obligatorio"],
   },
   img: {
     type: String,
@@ -17,13 +17,20 @@ const librarySchema = {
   },
   permission: [
     {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
     },
   ],
   public: {
     type: Boolean,
     required: [true, "Public es obligatorio"],
+    default: true,
   },
+  documents: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Document",
+    },
+  ],
 };
 
 module.exports = model("Library", librarySchema); //Debe ir en singular

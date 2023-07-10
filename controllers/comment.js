@@ -1,4 +1,3 @@
-const bcryptjs = require("bcryptjs");
 const { response } = require("express");
 const { model: Comment } = require("../models/comments");
 const { documentModel: Document } = require("../models/documents");
@@ -23,12 +22,15 @@ const addComment = async (req, res = response) => {
     const { comments } = document;
     console.log(comments);
     const newComments = comments.concat([commentInfo]);
-    console.log(newComments);
+    const punctuations =
+      newComments.map((a) => a.punctuation).reduce((a, b) => a + b) /
+      newComments.length;
     Document.findOneAndUpdate(
       { _id: documentId },
       {
         $set: {
           comments: newComments,
+          punctuation: Number(punctuations.toFixed(1)),
         },
       },
       { new: true },

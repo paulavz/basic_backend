@@ -57,15 +57,24 @@ const postUsers = async (req, res = response) => {
   });
 };
 
+const getUserById = async (req, res = response) => {
+  const id = req.params.id;
+
+  const document = await User.findById(id)
+    .populate({
+      path: "libraries",
+      populate: {
+        path: "documents",
+      },
+    })
+    .exec();
+
+  res.json(document);
+};
+
 const putUsers = (req, res = response) => {
   res.json({
     msg: "put API- controlador",
-  });
-};
-
-const patchUsers = (req, res = response) => {
-  res.json({
-    msg: "patch  API- controlador",
   });
 };
 
@@ -79,6 +88,6 @@ module.exports = {
   getUsers,
   postUsers,
   putUsers,
-  patchUsers,
   deleteUsers,
+  getUserById,
 };
