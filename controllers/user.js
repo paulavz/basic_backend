@@ -1,60 +1,84 @@
-const bcryptjs = require('bcryptjs');
-const { response } = require('express'); 
-const User = require('../models/users');
+const bcryptjs = require("bcryptjs");
+const { response } = require("express");
+const User = require("../models/users");
 
-const getUsers = (req, res = response) => {
-    res.json({
-        msg:'get API- controlador'
-    });
-}
+const getUsers = async (req, res = response) => {
+  const users = await User.find({});
+  res.json(users);
+};
 
 const postUsers = async (req, res = response) => {
-    const { name, email, password, role} = req.body;
-    const usuario = new User({name, email, password, role});
+  const {
+    name,
+    lastName,
+    email,
+    phone,
+    password,
+    img,
+    libraries,
+    type,
+    subject,
+    role,
+    state,
+  } = req.body;
 
-    //Verificar si el correo existe
-    const isEmail = await User.findOne({email});
-    if(isEmail){
-        return res.status(400).json({
-            msg:"El correo ya está registrado"
-        })
-    }
+  const usuario = new User({
+    name,
+    lastName,
+    email,
+    phone,
+    password,
+    img,
+    libraries,
+    type,
+    subject,
+    role,
+    state,
+  });
 
-    //Encriptar la contraseña
-    const salt = bcryptjs.genSaltSync();
-    usuario.password = bcryptjs.hashSync(password,salt);
-
-    //Guardar en BD
-    await usuario.save();
- 
-    res.json({
-        msg:'post API- controlador',
-        usuario
+  //Verificar si el correo existe
+  const isEmail = await User.findOne({ email });
+  if (isEmail) {
+    return res.status(400).json({
+      msg: "El correo ya está registrado",
     });
-}
+  }
+
+  //Encriptar la contraseña
+  const salt = bcryptjs.genSaltSync();
+  usuario.password = bcryptjs.hashSync(password, salt);
+
+  //Guardar en BD
+  await usuario.save();
+
+  res.json({
+    msg: "post API- controlador",
+    usuario,
+  });
+};
 
 const putUsers = (req, res = response) => {
-    res.json({
-        msg:'put API- controlador'
-    });
-}
+  res.json({
+    msg: "put API- controlador",
+  });
+};
 
 const patchUsers = (req, res = response) => {
-    res.json({
-        msg:'patch  API- controlador'
-    });
-}
+  res.json({
+    msg: "patch  API- controlador",
+  });
+};
 
 const deleteUsers = (req, res = response) => {
-    res.json({
-        msg:'delete API- controlador'
-    });
-}
+  res.json({
+    msg: "delete API- controlador",
+  });
+};
 
 module.exports = {
-    getUsers,
-    postUsers,
-    putUsers,
-    patchUsers,
-    deleteUsers
-}
+  getUsers,
+  postUsers,
+  putUsers,
+  patchUsers,
+  deleteUsers,
+};

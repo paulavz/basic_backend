@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const comments = require("./comments");
 
-const documentSchema = {
+const documentSchema = new Schema({
   title: {
     type: String,
     required: [true, "El titulo es obligatorio"],
@@ -32,7 +32,7 @@ const documentSchema = {
   },
   type: {
     type: String,
-    required: [true, "El autor es obligatorio"],
+    required: [true, "El tipo es obligatorio"],
   },
   gender: {
     type: String,
@@ -42,9 +42,12 @@ const documentSchema = {
   },
   comments: [
     {
-      type: comments,
+      type: comments.CommentSchema,
     },
   ],
-};
+});
 
-module.exports = model("Document", documentSchema); //Debe ir en singular
+module.exports = {
+  documentModel: model("Document", documentSchema), //Debe ir en singular
+  documentSchema,
+};

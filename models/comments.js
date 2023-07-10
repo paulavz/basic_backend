@@ -1,13 +1,13 @@
 const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
-const commentSchema = {
+const commentSchema = new Schema({
   userId: {
-    type: mongoose.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: [true, "El usuario es obligatorio"],
   },
   documentId: {
-    type: mongoose.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: [true, "El documento id es obligatorio"],
   },
   punctuation: {
@@ -18,8 +18,9 @@ const commentSchema = {
     type: String,
     required: [true, "El comentario es obligatorio"],
   },
-  updateAt: { type: Date, default: Date.now },
-  createAt: { type: Date, default: Date.now },
-};
+});
 
-module.exports = model("Comment", commentSchema); //Debe ir en singular
+module.exports = {
+  model: model("Comment", commentSchema),
+  CommentSchema: commentSchema,
+}; //Debe ir en singular

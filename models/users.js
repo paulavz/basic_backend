@@ -11,7 +11,7 @@ const userSchema = {
   },
   email: {
     type: String,
-    required: [true, "El nombre es obligatorio"],
+    required: [true, "El email es obligatorio"],
     unique: true,
   },
   phone: {
@@ -19,7 +19,7 @@ const userSchema = {
   },
   password: {
     type: String,
-    required: [true, "El nombre es obligatorio"],
+    required: [true, "El contraseña es obligatorio"],
   },
   img: {
     type: String,
@@ -30,6 +30,7 @@ const userSchema = {
   type: {
     type: String,
     enum: ["docente", "estudiante", "personal", "invitado"],
+    required: true,
   },
   subject: {
     type: String,
