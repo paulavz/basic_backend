@@ -11,6 +11,7 @@ class Server {
     this.commentPath = "/api/comment";
     this.libraryPath = "/api/library";
     this.memberPath = "/api/member";
+    this.filePath = "/api/files";
 
     //Conectar a base de datos
     this.connectDB();
@@ -42,6 +43,7 @@ class Server {
     this.app.use(this.commentPath, require("../routes/comment"));
     this.app.use(this.libraryPath, require("../routes/library"));
     this.app.use(this.memberPath, require("../routes/login"));
+    this.app.use(this.filePath, require("../routes/file"))
   }
 
   listen() {
