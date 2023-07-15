@@ -53,11 +53,24 @@ const getListFiles = (req, res) => {
 
 };
 
+
+//Como las imagenes se guardan en public, no hace falta bajarlas
+//sino que se puede acceder directamente a ellas a traves de http://localhost:3000/<path>
+//De otro modo, esta función hace que descargues el archivo a juro en vez de mostrarlo
+
+//Pero entonces, en caso de que existan se podrá acceder a los avatares mediante /pfp/<userId>.png
+//pero eso es porque yo los voy a guardar asi, me imagino que se podra revisar la db
+//y si no hay ningun link a una imagen pone la de fallback
+
 const download = (req, res) => {
     const fileName = req.params.name;
-    const directoryPath = "public/uploads";
+    let directoryPath = "";
 
-    res.download (directoryPath + fileName, fileName, (err) => {
+    if (req.path.includes("/pfp/")) directoryPath = "public/pfp";
+    else if (req.path.includes("/cover/")) directoryPath = "public/cover";
+    else directoryPath = "public/uploads";
+    
+    res.download (directoryPath + '/' + fileName, fileName, (err) => {
         if (err) {
             res.status(500).send ({
                 message: "No se pudo descargar el archivo" + err,

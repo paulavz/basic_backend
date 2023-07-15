@@ -5,11 +5,15 @@ const maxSize = 1024 * 1024 * 10
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './public/uploads');
+    if (req.body.filetype == "pfp") cb(null, './public/pfp');
+    else if (req.body.filetype == "cover") cb(null, './public/uploads');
+    else cb(null, './public/uploads');
   },
   filename: (req, file, cb) => {
     console.log(file.originalname);
-    cb(null, Date.now() + '-' + file.originalname);
+    if (req.body.filetype == "pfp") cb(null, req.body.id + '.png');
+    else if (req.body.filetype == "cover") cb(null, req.body.id + '.png');
+    else cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
