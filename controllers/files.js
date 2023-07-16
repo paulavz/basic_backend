@@ -2,53 +2,44 @@ const uploadFile = require('../middlewares/upload')
 const FileSystem = require('fs');
 const User = require("../models/users");
 const { response } = require("express");
-const express = require("express");
+const url = require("url");
 const { documentModel: Document } = require("../models/documents");
 
 const baseUrl = "http://localhost:4000/files/";
 
 const upload = async (req, res = response) => {
-    const {id, filetype} = req.body;
-    console.log(id);
-    /*  1. verificar si el tipo de archivo a subir requiere un id
-        2. verificar si el usuario o documento existen en BD
-        3. subir archivo*/
-    try {
-        
-        try {
-            if (filetype == "pfp") {
-                const document = await User.findById(id).exec();
-                console.log("pfp");
-                res.json(document);
-            }
-            if (filetype == "cover") {
-                const id = req.params.id;
-                const document = await Document.findById(id).exec();
-                res.json(document);
-            }
-        }
-        catch (err) {
-            console.log(err);
-            return res.status(400).send({ message: "Elemento no encontrado en BD" });
-        }
 
+    try {
         await uploadFile (req,res);
         if (req.file == undefined) {
-            return res.status(400).send({ message: "Sube un archivo pls" });
+            return res.status(400).send({ message: "No se subió un archivo" });
         }
+        //Esta parte hace que devuelva el link entero si se le añade esto
+        //tipo http://localhost:3000/pfp/nombre.png
+        //pero como el host es dinamico se guarda sin eso y se lo añades despues
+        /*
+        fileurl = url.format({
+            protocol: req.protocol,
+            host: req.get('host'),
+        });
+        */
+
+        if (req.path.includes("/pfp")) fileurl = "/pfp/" + req.file.filename;
+        else if (req.path.includes("/cover")) fileurl = "/cover/" + req.file.filename;
+        else fileurl = "/uploads/" + req.file.filename;
 
         res.status(200).send ({
             message: "Archivo subido correctamente: " + req.file.originalname,
+            path: fileurl
         });
+        //aqui entonces buscas como guardar el mensaje path y haces un put en la base de datos
     }
     catch (err) {
-        console.log(err);
         if (err.code == "LIMIT_FILE_SIZE") {
             return res.status(500).send({
                 message: "Peso Limite: 10 MB"
             });
         }
-        //console.log(err);
         res.status(500).send ({
             message: `No se logro subir el archivo. ${err}`,
         });
@@ -92,8 +83,8 @@ const download = (req, res) => {
     const fileName = req.params.name;
     let directoryPath = "";
 
-    if (req.path.includes("/pfp/")) directoryPath = "public/pfp";
-    else if (req.path.includes("/cover/")) directoryPath = "public/cover";
+    if (req.path.includes("/pfp")) directoryPath = "public/pfp";
+    else if (req.path.includes("/cover")) directoryPath = "public/cover";
     else directoryPath = "public/uploads";
     
     res.download (directoryPath + '/' + fileName, fileName, (err) => {

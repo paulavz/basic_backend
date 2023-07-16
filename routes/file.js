@@ -9,8 +9,8 @@ const {
 const router = Router();
 
 router.post("/upload", upload);
-//router.post("/upload/pfp", upload);
-//router.post("/upload/cover", upload);
+router.post("/upload/pfp", upload);
+router.post("/upload/cover", upload);
 router.get("/", getListFiles);
 router.get("/:name", download);
 
