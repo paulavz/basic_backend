@@ -1,14 +1,18 @@
 const { response } = require("express");
 const mongoose = require("mongoose");
 const Library = require("../models/libraries");
+const User = require("../models/users");
 
 const getLibrary = async (req, res = response) => {
-  const library = await Library.find({}).populate("documents");
+  const library = await Library.find({})
+    .populate("documents")
+    .populate("userId");
   res.json(library);
 };
 
 const createLibrary = async (req, res = response) => {
-  const { img, name, subject, permission, public, documents } = req.body;
+  const { img, name, subject, permission, public, documents, userId } =
+    req.body;
   const library = new Library({
     img,
     name,
@@ -16,14 +20,26 @@ const createLibrary = async (req, res = response) => {
     permission,
     public,
     documents,
+    userId,
   });
 
   //Guardar en BD
-  await library.save();
-
-  res.json({
-    msg: "post API- controlador",
-    library,
+  library.save().then((resp) => {
+    User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: {
+          libraries: resp._id,
+        },
+      },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          res.json({ error: err });
+        }
+        res.json({ doc });
+      }
+    );
   });
 };
 

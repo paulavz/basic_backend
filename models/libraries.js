@@ -4,6 +4,7 @@ const librarySchema = {
   userId: {
     type: Schema.Types.ObjectId,
     required: [true, "El userId es obligatorio"],
+    ref: "User"
   },
   img: {
     type: String,

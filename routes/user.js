@@ -7,6 +7,9 @@ const {
   patchUsers,
   deleteUsers,
   getUserById,
+  getDocumentByUserId,
+  followLibrary,
+  unFollowLibrary,
 } = require("../controllers/user");
 const { validateEntry } = require("../middlewares/validateEntry");
 const { isRoleValidator } = require("../helpers/db-validators");
@@ -35,6 +38,10 @@ router.put("/", putUsers);
 
 router.delete("/", deleteUsers);
 
-router.get("/:id", getUserById);
+router.get("/:id", getDocumentByUserId);
+
+router.put("/follow/:id", followLibrary);
+
+router.put("/unfollow/:id", unFollowLibrary);
 
 module.exports = router;
