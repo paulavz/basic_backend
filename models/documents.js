@@ -49,6 +49,9 @@ const documentSchema = new Schema({
     type: Number,
     default: 0,
   },
+  file: {
+    type: String,
+  },
 });
 
 module.exports = {

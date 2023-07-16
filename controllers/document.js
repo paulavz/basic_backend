@@ -23,6 +23,7 @@ const postDocument = async (req, res = response) => {
     gender,
     country,
     comments,
+    file
   } = req.body;
 
   const document = new Document({
@@ -38,6 +39,7 @@ const postDocument = async (req, res = response) => {
     gender,
     country,
     comments,
+    file
   });
 
   //Guardar en BD
