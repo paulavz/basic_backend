@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const Library = require("../models/libraries");
 
 const getLibrary = async (req, res = response) => {
-  const library = await Library.find({}).populate("documents").sort({_id:-1});
+  const limit = req.query.limit;
+  const library = await Library.find({}).populate("documents").sort({_id:-1}).limit(limit);
   res.json(library);
 };
 
 const createLibrary = async (req, res = response) => {
-  const { img, name, subject, permission, public, documents } = req.body;
+  const { img, name, subject, permission, public, documents, userId } = req.body;
   const library = new Library({
     img,
     name,
@@ -16,6 +17,7 @@ const createLibrary = async (req, res = response) => {
     permission,
     public,
     documents,
+    userId
   });
 
   //Guardar en BD
