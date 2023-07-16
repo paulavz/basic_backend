@@ -18,9 +18,30 @@ const storage = multer.diskStorage({
 // Create the multer instance
 const upload = multer({
   storage: storage,
-  limits: { fileSize: maxSize }
+  limits: { fileSize: maxSize },
+  fileFilter: function (req, file, cb) {
+    checkFileType(req, file, cb)
+  }
 }).single("file");
 
+
+function checkFileType (req, file, cb) {
+  //regexp vacia
+  let filetypes = / /;
+  if ((!req.path.includes("/pfp")) && (!req.path.includes("/cover"))) {
+    //si es una subida normal, se permiten estos archivos
+    filetypes = /txt|doc|docx|ppt|pptx|pdf/;
+  }
+  //de otra manera solo imagenes
+  else filetypes = /jpeg|jpg|png|gif/;
+  //revisa que las extensiones coincidan
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+  //en caso de que pase las dos pruebas sube el archivo
+  if(mimetype && extname) return cb(null, true);
+  //de lo contrario cancela la operacion
+  else return cb(null, false);
+}
 
 const uploadFile = util.promisify(upload);
 module.exports = uploadFile;

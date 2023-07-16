@@ -12,7 +12,7 @@ const upload = async (req, res = response) => {
     try {
         await uploadFile (req,res);
         if (req.file == undefined) {
-            return res.status(400).send({ message: "No se subió un archivo" });
+            return res.status(400).send({ message: "No se subió un archivo o el formato es incorrecto" });
         }
         //Esta parte hace que devuelva el link entero si se le añade esto
         //tipo http://localhost:3000/pfp/nombre.png
