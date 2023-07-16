@@ -1,5 +1,10 @@
 node_modules
 .env
+<<<<<<< HEAD
 public/uploads
 public/pfp
 public/cover
+=======
+
+
+>>>>>>> 3b406231d50a2862e95bd2025fcb67b11910fbd9

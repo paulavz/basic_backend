@@ -1,6 +1,8 @@
 const bcryptjs = require("bcryptjs");
 const { response } = require("express");
 const User = require("../models/users");
+const Library = require("../models/libraries");
+const mongoose = require("mongoose");
 
 const getUsers = async (req, res = response) => {
   const users = await User.find({});
@@ -58,24 +60,25 @@ const postUsers = async (req, res = response) => {
   });
 };
 
-const getUserById = async (req, res = response) => {
+const getDocumentByUserId = async (req, res = response) => {
   const id = req.params.id;
 
-  try {
-    const document = await User.findById(id)
-      .populate({
-        path: "libraries",
-        populate: {
-          path: "documents",
-        },
-      })
-      .exec();
-    res.json(document);
-  }
-  catch (err) {
-    return res.status(400).send({ message: "Item no encontrado" });
-  }
-  
+  const document = await User.findById(id)
+    .populate({
+      path: "libraries",
+      populate: {
+        path: "documents",
+      },
+    })
+    .populate({
+      path: "followLibraries",
+      populate: {
+        path: "documents",
+      },
+    })
+    .exec();
+
+  res.json(document);
 };
 
 const putUsers = (req, res = response) => {
@@ -90,10 +93,76 @@ const deleteUsers = (req, res = response) => {
   });
 };
 
+const followLibrary = async (req, res = response) => {
+  const id = req.params.id;
+  console.log(id);
+  const { libraryId } = req.body;
+  const library = await Library.findById(libraryId).exec();
+  const usersInfo = await User.findById(id).exec();
+  console.log(library, usersInfo);
+  if (library) {
+    if (!usersInfo?.followLibraries?.includes(libraryId)) {
+      const formatLibraries = usersInfo?.followLibraries?.map(
+        (el) => new mongoose.mongo.ObjectId(el)
+      );
+      const idL = new mongoose.mongo.ObjectId(libraryId);
+      const newLib = [idL].concat(formatLibraries);
+
+      User.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            followLibraries: newLib,
+          },
+        },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            res.json({ error: err });
+          }
+
+          res.json(doc);
+        }
+      );
+    } else {
+      res.json({
+        msg: "No puedes añadir documentos repetidos",
+      });
+    }
+  }
+};
+
+const unFollowLibrary = async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  const { libraryId } = req.body;
+  const usersInfo = await User.findById(id).exec();
+  if (usersInfo) {
+    User.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          followLibraries: libraryId,
+        },
+      },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          res.json({ error: err });
+        }
+
+        res.json(doc);
+      }
+    );
+  }
+};
+
 module.exports = {
   getUsers,
   postUsers,
   putUsers,
   deleteUsers,
-  getUserById,
+  getDocumentByUserId,
+  followLibrary,
+  unFollowLibrary,
 };
