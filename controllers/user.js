@@ -23,6 +23,7 @@ const postUsers = async (req, res = response) => {
     role,
     state,
   } = req.body;
+  console.log(req.body);
 
   const usuario = new User({
     name,

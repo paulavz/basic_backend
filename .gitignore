@@ -2,3 +2,6 @@ node_modules
 .env
 
 
+public/uploads
+public/pfp
+public/cover
