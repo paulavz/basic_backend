@@ -1,13 +1,37 @@
 const uploadFile = require('../middlewares/upload')
 const FileSystem = require('fs');
+const User = require("../models/users");
+const { response } = require("express");
+const { documentModel: Document } = require("../models/documents");
 
 const baseUrl = "http://localhost:4000/files/";
 
-const upload = async (req, res) => {
-    //Añadir file como key
+const upload = async (req, res = response) => {
+    const {id, filetype} = req.body;
+    console.log(req.body);
+    /*  1. verificar si el tipo de archivo a subir requiere un id
+        2. verificar si el usuario o documento existen en BD
+        3. subir archivo*/
     try {
-        await uploadFile (req,res);
+        
+        try {
+            if (filetype == "pfp") {
+                const document = await User.findById(id).exec();
+                console.log("pfp");
+                res.json(document);
+            }
+            if (filetype == "cover") {
+                const id = req.params.id;
+                const document = await Document.findById(id).exec();
+                res.json(document);
+            }
+        }
+        catch (err) {
+            console.log(err);
+            return res.status(400).send({ message: "Elemento no encontrado en BD" });
+        }
 
+        await uploadFile (req,res);
         if (req.file == undefined) {
             return res.status(400).send({ message: "Sube un archivo pls" });
         }
@@ -17,6 +41,7 @@ const upload = async (req, res) => {
         });
     }
     catch (err) {
+        console.log(err);
         if (err.code == "LIMIT_FILE_SIZE") {
             return res.status(500).send({
                 message: "Peso Limite: 10 MB"

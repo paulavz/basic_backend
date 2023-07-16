@@ -43,7 +43,7 @@ class Server {
     this.app.use(this.commentPath, require("../routes/comment"));
     this.app.use(this.libraryPath, require("../routes/library"));
     this.app.use(this.memberPath, require("../routes/login"));
-    this.app.use(this.filePath, require("../routes/file"))
+    this.app.use(this.filePath, require("../routes/file"));
   }
 
   listen() {

@@ -8,9 +8,9 @@ const storage = multer.diskStorage({
     if (req.body.filetype == "pfp") cb(null, './public/pfp');
     else if (req.body.filetype == "cover") cb(null, './public/uploads');
     else cb(null, './public/uploads');
+    console.log(req.body);
   },
   filename: (req, file, cb) => {
-    console.log(file.originalname);
     if (req.body.filetype == "pfp") cb(null, req.body.id + '.png');
     else if (req.body.filetype == "cover") cb(null, req.body.id + '.png');
     else cb(null, Date.now() + '-' + file.originalname);
@@ -24,5 +24,5 @@ const upload = multer({
 }).single("file");
 
 
-const uploadFile = util.promisify(upload)
+const uploadFile = util.promisify(upload);
 module.exports = uploadFile;

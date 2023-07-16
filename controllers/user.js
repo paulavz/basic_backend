@@ -60,16 +60,21 @@ const postUsers = async (req, res = response) => {
 const getUserById = async (req, res = response) => {
   const id = req.params.id;
 
-  const document = await User.findById(id)
-    .populate({
-      path: "libraries",
-      populate: {
-        path: "documents",
-      },
-    })
-    .exec();
-
-  res.json(document);
+  try {
+    const document = await User.findById(id)
+      .populate({
+        path: "libraries",
+        populate: {
+          path: "documents",
+        },
+      })
+      .exec();
+    res.json(document);
+  }
+  catch (err) {
+    return res.status(400).send({ message: "Item no encontrado" });
+  }
+  
 };
 
 const putUsers = (req, res = response) => {
