@@ -2,13 +2,14 @@ const uploadFile = require('../middlewares/upload')
 const FileSystem = require('fs');
 const User = require("../models/users");
 const { response } = require("express");
+const express = require("express");
 const { documentModel: Document } = require("../models/documents");
 
 const baseUrl = "http://localhost:4000/files/";
 
 const upload = async (req, res = response) => {
     const {id, filetype} = req.body;
-    console.log(req.body);
+    console.log(id);
     /*  1. verificar si el tipo de archivo a subir requiere un id
         2. verificar si el usuario o documento existen en BD
         3. subir archivo*/
