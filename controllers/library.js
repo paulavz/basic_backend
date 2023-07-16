@@ -4,9 +4,7 @@ const Library = require("../models/libraries");
 const User = require("../models/users");
 
 const getLibrary = async (req, res = response) => {
-  const library = await Library.find({})
-    .populate("documents")
-    .populate("userId");
+  const library = await Library.find({}).populate("documents").sort({_id:-1});
   res.json(library);
 };
 
