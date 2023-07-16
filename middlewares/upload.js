@@ -1,5 +1,6 @@
 const multer = require('multer');
 const util = require('util');
+const path = require('path');
 //10 MB como maximo para general use
 const maxSize = 1024 * 1024 * 10;
 
@@ -10,7 +11,7 @@ const storage = multer.diskStorage({
     else cb(null, './public/uploads');
   },
   filename: (req, file, cb) => {
-    cb(null, "" + Date.now() + ".png");
+    cb(null, "" + Date.now() + path.extname(file.originalname));
   }
 });
 
