@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Library = require("../models/libraries");
 
 const getLibrary = async (req, res = response) => {
-  const library = await Library.find({}).populate("documents");
+  const library = await Library.find({}).populate("documents").sort({_id:-1});
   res.json(library);
 };
 

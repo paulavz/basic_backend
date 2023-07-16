@@ -5,7 +5,8 @@ const { model: Comment } = require("../models/comments");
 const mongoose = require("mongoose");
 
 const getDocuments = async (req, res = response) => {
-  const documents = await Document.find({});
+  const documents = await Document.find({}).sort({_id:-1}) ;
+  console.log(documents);
   res.json(documents);
 };
 
