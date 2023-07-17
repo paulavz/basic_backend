@@ -20,7 +20,6 @@ const addComment = async (req, res = response) => {
 
   await newComment.save(function (err, commentInfo) {
     const { comments } = document;
-    console.log(comments);
     const newComments = comments.concat([commentInfo]);
     const punctuations =
       newComments.map((a) => a.punctuation).reduce((a, b) => a + b) /

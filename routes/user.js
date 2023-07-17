@@ -44,4 +44,6 @@ router.put("/follow/:id", followLibrary);
 
 router.put("/unfollow/:id", unFollowLibrary);
 
+router.put("/:id/edit", putUsers);
+
 module.exports = router;

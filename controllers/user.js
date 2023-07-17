@@ -82,9 +82,18 @@ const getDocumentByUserId = async (req, res = response) => {
 };
 
 const putUsers = (req, res = response) => {
-  res.json({
-    msg: "put API- controlador",
-  });
+  const id = req.params.id;
+  User.findOneAndUpdate(
+    { _id: id },
+    { $set: req.body },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        res.json({ error: err });
+      }
+      res.json(doc);
+    }
+  );
 };
 
 const deleteUsers = (req, res = response) => {
