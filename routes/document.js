@@ -5,9 +5,12 @@ const {
   getDocumentById,
   putDocument,
   putComment,
+  getSearch,
 } = require("../controllers/document");
 
 const router = Router();
+
+router.post("/buscar", getSearch);
 
 router.get("/", getDocuments);
 

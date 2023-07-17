@@ -5,7 +5,9 @@ const Library = require("../models/libraries");
 const mongoose = require("mongoose");
 
 const getUsers = async (req, res = response) => {
-  const users = await User.find({});
+  const limit = req.query.limit;
+  console.log("limit", limit);
+  const users = await User.find({}).sort({ _id: -1 }).limit(limit);
   res.json(users);
 };
 

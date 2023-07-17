@@ -5,6 +5,7 @@ const documentSchema = new Schema({
   title: {
     type: String,
     required: [true, "El titulo es obligatorio"],
+    index: true,
   },
   publisher: {
     type: String,
