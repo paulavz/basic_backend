@@ -5,10 +5,21 @@ const { model: Comment } = require("../models/comments");
 const mongoose = require("mongoose");
 
 const getDocuments = async (req, res = response) => {
+  //query: document/?limit=NUMERO&page=PAGINA
   const limit = req.query.limit;
-  const documents = await Document.find({}).sort({_id:-1}).limit(limit) ;
-  console.log(documents);
-  res.json(documents);
+  const page = req.query.page;
+
+  const documents = await Document.find({})
+    .limit(limit)
+    .skip((page- 1)* limit)
+    .sort({_id:-1});
+
+  const count = await Document.countDocuments();
+
+  const totalPages = Math.ceil(count/limit);
+  const currentPage = parseInt(page);
+
+  res.json({document, totalPages: totalPages, currentPage: currentPage})
 };
 
 const postDocument = async (req, res = response) => {

@@ -4,11 +4,23 @@ const Library = require("../models/libraries");
 const User = require("../models/users");
 
 const getLibrary = async (req, res = response) => {
-  limit = req.query.limit
-  const library = await Library.find({})
+  //query: library/?limit=NUMERO&page=PAGINA
+  //si no hay query, regresa todos los items
+  const limit = req.query.limit;
+  const page = req.query.page;
+
+  const libraries = await Library.find({})
     .populate("documents")
-    .populate("userId").sort({_id:-1}).limit(limit);;
-  res.json(library);
+    .limit(limit)
+    .skip((page- 1)* limit)
+    .sort({_id:-1});
+  
+  const count = await Library.countDocuments();
+
+  const totalPages = Math.ceil(count/limit);
+  const currentPage = parseInt(page);
+
+  res.json({libraries, totalPages: totalPages, currentPage: currentPage});
 };
 
 const createLibrary = async (req, res = response) => {
